@@ -1,5 +1,4 @@
-
-'use client'
+"use client";
 import GoogleMapReact from "google-map-react";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;

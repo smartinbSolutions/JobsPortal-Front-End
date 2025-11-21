@@ -7,12 +7,13 @@ import LoginPopup from "../common/form/login/LoginPopup";
 import Partner from "../common/partner/Partner";
 import FooterDefault from "../footer/common-footer";
 import Funfact from "../fun-fact-counter/Funfact";
-import DefaulHeader2 from "../header/DefaulHeader2";
+import DefaulHeader from "../header/DefaulHeader";
 import MobileMenu from "../header/MobileMenu";
 import Hero1 from "../hero/hero-1";
 import JobCategorie1 from "../job-categories/JobCategorie1";
 import JobFeatured1 from "../job-featured/JobFeatured1";
 import Testimonial from "../testimonial/Testimonial";
+import { ToastContainer } from "react-toastify";
 
 const index = () => {
   return (
@@ -20,7 +21,7 @@ const index = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DefaulHeader2 />
+      <DefaulHeader />
       {/* End Header with upload cv btn */}
 
       <MobileMenu />
@@ -51,7 +52,7 @@ const index = () => {
       <section className="job-section">
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>Featured Jobs</h2>
+            <h2>Latest Jobs</h2>
             <div className="text">
               Know your worth and find the job that qualify your life
             </div>
@@ -66,7 +67,7 @@ const index = () => {
               href="/job-list-v1"
               className="theme-btn btn-style-one bg-blue"
             >
-              <span className="btn-title">Load More Listing</span>
+              <span className="btn-title">View More Listing</span>
             </Link>
           </div>
         </div>
@@ -147,6 +148,7 @@ const index = () => {
 
       <FooterDefault />
       {/* <!-- End Main Footer --> */}
+      <ToastContainer />
     </>
   );
 };

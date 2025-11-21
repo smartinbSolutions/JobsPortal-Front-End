@@ -1,44 +1,40 @@
-import employersInfo from "@/data/topCompany";
+"use client";
+
 import LoginPopup from "@/components/common/form/login/LoginPopup";
 import FooterDefault from "@/components/footer/common-footer";
 import DefaulHeader from "@/components/header/DefaulHeader";
 import MobileMenu from "@/components/header/MobileMenu";
 import JobDetailsDescriptions from "@/components/employer-single-pages/shared-components/JobDetailsDescriptions";
 import RelatedJobs from "@/components/employer-single-pages/related-jobs/RelatedJobs";
-import MapJobFinder from "@/components/job-listing-pages/components/MapJobFinder";
-import Social from "@/components/employer-single-pages/social/Social";
-import PrivateMessageBox from "@/components/employer-single-pages/shared-components/PrivateMessageBox";
 import Image from "next/image";
+import { useGetCompanyQuery } from "@/RTK/jobCompaniesApi";
+import LoadingCard from "@/components/common/LoadingCard";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import { showToast } from "@/hooks/global/showToast";
 
-export const metadata = {
-  title:
-    "Employers Single Dyanmic V1 || Superio - Job Borad React NextJS Template",
-  description: "Superio - Job Borad React NextJS Template",
-};
+const EmployersSingleV1 = () => {
+  const { id } = useParams();
 
-const EmployersSingleV1 = ({ params }) => {
-  const id = params.id;
+  const { data, isLoading, error } = useGetCompanyQuery(id);
 
-  const employer =
-    employersInfo.find((item) => item.id == id) || employersInfo[0];
+  const [employer, setEmployer] = useState();
+
+  useEffect(() => {
+    if (data) setEmployer(data?.data);
+  }, [id, data]);
+
+  if (isLoading) return <LoadingCard />;
 
   return (
     <>
-      {/* <!-- Header Span --> */}
       <span className="header-span"></span>
-
       <LoginPopup />
-      {/* End Login Popup Modal */}
-
       <DefaulHeader />
-      {/* <!--End Main Header --> */}
-
       <MobileMenu />
-      {/* End MobileMenu */}
 
-      {/* <!-- Job Detail Section --> */}
       <section className="job-detail-section">
-        {/* <!-- Upper Box --> */}
         <div className="upper-box">
           <div className="auto-container">
             <div className="job-block-seven">
@@ -48,44 +44,49 @@ const EmployersSingleV1 = ({ params }) => {
                     <Image
                       width={100}
                       height={100}
-                      src={employer?.img}
+                      src={employer?.logo}
                       alt="logo"
                     />
                   </span>
-                  <h4>{employer?.name}</h4>
+                  <h4>{employer?.companyName}</h4>
 
                   <ul className="job-info">
-                    <li>
-                      <span className="icon flaticon-map-locator"></span>
-                      {employer?.location}
-                    </li>
-                    {/* compnay info */}
-                    <li>
-                      <span className="icon flaticon-briefcase"></span>
-                      {employer?.jobType}
-                    </li>
-                    {/* location info */}
-                    <li>
-                      <span className="icon flaticon-telephone-1"></span>
-                      {employer?.phone}
-                    </li>
-                    {/* time info */}
+                    {employer?.address?.city && (
+                      <li>
+                        <span className="icon flaticon-map-locator"></span>
+                        {employer?.address?.city}, {employer?.address?.country}
+                      </li>
+                    )}
+
+                    {employer?.phone && (
+                      <li>
+                        <span className="icon flaticon-telephone-1"></span>
+                        {employer?.phone}
+                      </li>
+                    )}
+
                     <li>
                       <span className="icon flaticon-mail"></span>
                       {employer?.email}
                     </li>
-                    {/* salary info */}
                   </ul>
-                  {/* End .job-info */}
 
                   <ul className="job-other-info">
-                    <li className="time">Open Jobs – {employer.jobNumber}</li>
+                    <li className="time">
+                      Open Jobs – {employer?.jobAdvertisement?.length}
+                    </li>
                   </ul>
-                  {/* End .job-other-info */}
                 </div>
-                {/* End .content */}
-
                 <div className="btn-box">
+                  <a
+                    href={`/company-jobs/${employer?._id}`}
+                    className="theme-btn btn-style-one"
+                    disabled={employer?.jobAdvertisement?.length === 0}
+                  >
+                    Browse Jobs
+                  </a>
+                </div>
+                {/* <div className="btn-box">
                   <button
                     className="theme-btn btn-style-one"
                     data-bs-toggle="modal"
@@ -97,9 +98,7 @@ const EmployersSingleV1 = ({ params }) => {
                     <i className="flaticon-bookmark"></i>
                   </button>
                 </div>
-                {/* End btn-box */}
 
-                {/* <!-- Modal --> */}
                 <div
                   className="modal fade"
                   id="privateMessage"
@@ -110,7 +109,7 @@ const EmployersSingleV1 = ({ params }) => {
                     <div className="apply-modal-content modal-content">
                       <div className="text-center">
                         <h3 className="title">
-                          Send message to {employer.name}
+                          Send message to {employer?.name}
                         </h3>
                         <button
                           type="button"
@@ -119,117 +118,94 @@ const EmployersSingleV1 = ({ params }) => {
                           aria-label="Close"
                         ></button>
                       </div>
-                      {/* End modal-header */}
 
                       <PrivateMessageBox />
-                      {/* End PrivateMessageBox */}
                     </div>
-                    {/* End .send-private-message-wrapper */}
                   </div>
-                </div>
-                {/* End .modal */}
+                </div> */}
               </div>
             </div>
-            {/* <!-- Job Block --> */}
           </div>
         </div>
-        {/* <!-- Upper Box --> */}
 
-        {/* <!-- job-detail-outer--> */}
         <div className="job-detail-outer">
           <div className="auto-container">
             <div className="row">
               <div className="content-column col-lg-8 col-md-12 col-sm-12">
-                {/*  job-detail */}
-                <JobDetailsDescriptions />
-                {/* End job-detail */}
+                <JobDetailsDescriptions description={employer?.about} />
 
-                {/* <!-- Related Jobs --> */}
-                <div className="related-jobs">
+                {employer?.jobAdvertisement?.length > 0 ? (
+                  <div className="related-jobs">
+                    <div className="title-box">
+                      <h3>Newest Jobs From {employer.companyName}</h3>
+                      <div className="text">
+                        {employer?.jobAdvertisement?.length} job(s) live
+                      </div>
+                    </div>
+
+                    <RelatedJobs />
+                  </div>
+                ) : (
                   <div className="title-box">
-                    <h3>3 Others jobs available</h3>
+                    <h3>No available jobs. For now..</h3>
                     <div className="text">
-                      2020 jobs live - 293 added today.
+                      Come back later, maybe there will be some.
                     </div>
                   </div>
-                  {/* End .title-box */}
-
-                  <RelatedJobs />
-                  {/* End RelatedJobs */}
-                </div>
-                {/* <!-- Related Jobs --> */}
+                )}
               </div>
-              {/* End .content-column */}
 
               <div className="sidebar-column col-lg-4 col-md-12 col-sm-12">
                 <aside className="sidebar">
                   <div className="sidebar-widget company-widget">
                     <div className="widget-content">
-                      {/*  compnay-info */}
                       <ul className="company-info mt-0">
                         <li>
-                          Primary industry: <span>Software</span>
+                          Primary industry: <span>{employer?.industry}</span>
                         </li>
-                        <li>
-                          Company size: <span>501-1,000</span>
-                        </li>
-                        <li>
-                          Founded in: <span>2011</span>
-                        </li>
-                        <li>
-                          Phone: <span>{employer?.phone}</span>
-                        </li>
+                        {employer?.size && (
+                          <li>
+                            Company size: <span>{employer?.size}</span>
+                          </li>
+                        )}
+                        {employer?.foundedAt && (
+                          <li>
+                            Founded in: <span>{employer?.foundedAt}</span>
+                          </li>
+                        )}
+                        {employer?.phone && (
+                          <li>
+                            Phone: <span>{employer?.phone}</span>
+                          </li>
+                        )}
                         <li>
                           Email: <span>{employer?.email}</span>
                         </li>
-                        <li>
-                          Location: <span>{employer?.location}</span>
-                        </li>
-                        <li>
-                          Social media:
-                          <Social />
-                        </li>
+                        {employer?.address?.city && (
+                          <li>
+                            Location:{" "}
+                            <span>
+                              {employer?.address?.city},{" "}
+                              {employer?.address?.country}
+                            </span>
+                          </li>
+                        )}
+                        {employer?.website && (
+                          <li>
+                            Website: <span>{employer?.website}</span>
+                          </li>
+                        )}
                       </ul>
-                      {/* End compnay-info */}
-
-                      <div className="btn-box">
-                        <a
-                          href="#"
-                          className="theme-btn btn-style-three"
-                          style={{ textTransform: "lowercase" }}
-                        >
-                          www.{employer?.name}.com
-                        </a>
-                      </div>
-                      {/* btn-box */}
                     </div>
                   </div>
-                  {/* End company-widget */}
-
-                  <div className="sidebar-widget">
-                    {/* <!-- Map Widget --> */}
-                    <h4 className="widget-title">Job Location</h4>
-                    <div className="widget-content">
-                      <div style={{ height: "300px", width: "100%" }}>
-                        <MapJobFinder />
-                      </div>
-                    </div>
-                    {/* <!--  Map Widget --> */}
-                  </div>
-                  {/* End sidebar-widget */}
                 </aside>
-                {/* End .sidebar */}
               </div>
-              {/* End .sidebar-column */}
             </div>
           </div>
         </div>
-        {/* <!-- job-detail-outer--> */}
       </section>
-      {/* <!-- End Job Detail Section --> */}
-
+      <ToastContainer />
       <FooterDefault footerStyle="alternate5" />
-      {/* <!-- End Main Footer --> */}
     </>
   );
 };

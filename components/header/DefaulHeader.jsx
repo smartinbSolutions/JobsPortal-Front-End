@@ -1,12 +1,13 @@
-
-'use client'
+"use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import HeaderNavContent from "./HeaderNavContent";
 import Image from "next/image";
+import useLogin from "@/hooks/auth/useLogin";
 
 const DefaulHeader = () => {
+  const { logout, userData } = useLogin();
   const [navbar, setNavbar] = useState(false);
 
   const changeBackground = () => {
@@ -20,6 +21,14 @@ const DefaulHeader = () => {
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
   }, []);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     // <!-- Main Header-->
@@ -53,14 +62,16 @@ const DefaulHeader = () => {
 
         <div className="outer-box">
           {/* <!-- Login/Register --> */}
+
           <div className="btn-box">
             <a
               href="#"
               className="theme-btn btn-style-three call-modal"
               data-bs-toggle="modal"
               data-bs-target="#loginPopupModal"
+              onClick={userData && logout}
             >
-              Login / Register
+              {userData ? userData?.name : "Login / Register"}
             </a>
             <Link
               href="/employers-dashboard/post-jobs"

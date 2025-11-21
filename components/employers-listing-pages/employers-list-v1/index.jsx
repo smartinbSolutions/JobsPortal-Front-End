@@ -1,65 +1,57 @@
 import FooterDefault from "../../../components/footer/common-footer";
 import Breadcrumb from "../../common/Breadcrumb";
 import LoginPopup from "../../common/form/login/LoginPopup";
-import DefaulHeader2 from "../../header/DefaulHeader2";
+import DefaulHeader from "../../header/DefaulHeader";
 import MobileMenu from "../../header/MobileMenu";
 import FilterTopBox from "./FilterTopBox";
 import FilterSidebar from "./FilterSidebar";
+import useCompanies from "@/hooks/companies/useCompanies";
 
 const index = () => {
+  const filters = useCompanies();
   return (
     <>
-      {/* <!-- Header Span --> */}
       <span className="header-span"></span>
-
       <LoginPopup />
-      {/* End Login Popup Modal */}
-
-      <DefaulHeader2 />
-      {/* End Header with upload cv btn */}
-
+      <DefaulHeader />
       <MobileMenu />
-      {/* End MobileMenu */}
-
       <Breadcrumb title="Companies" meta="Companies" />
-      {/* <!--End Breadcrumb Start--> */}
-
       <section className="ls-section">
         <div className="auto-container">
           <div className="row">
-            <div
-              className="offcanvas offcanvas-start"
-              tabIndex="-1"
-              id="filter-sidebar"
-              aria-labelledby="offcanvasLabel"
-            >
-              <div className="filters-column hide-left">
-                <FilterSidebar />
-              </div>
+            {/* Sidebar */}
+            <div className="filters-column col-lg-4">
+              <FilterSidebar
+                {...filters}
+                categories={[
+                  { id: 1, name: "IT", value: "it" },
+                  { id: 2, name: "Finance", value: "finance" },
+                ]}
+              />
             </div>
-            {/* End filter column for tablet and mobile devices */}
 
-            <div className="filters-column hidden-1023 col-lg-4 col-md-12 col-sm-12">
-              <FilterSidebar />
+            {/* Content */}
+            <div className="content-column col-lg-8">
+              <FilterTopBox
+                keyword={filters.keyword}
+                setKeyword={filters.setKeyword}
+                location={filters.location}
+                setLocation={filters.setLocation}
+                sort={filters.sort}
+                setSort={filters.setSort}
+                limit={filters.limit}
+                setLimit={filters.setLimit}
+                page={filters.page}
+                setPage={filters.setPage}
+                data={filters.data}
+                isLoading={filters.isLoading}
+              />
             </div>
-            {/* <!-- End Filters Column for destop and laptop --> */}
-
-            <div className="content-column col-lg-8 col-md-12 col-sm-12">
-              <div className="ls-outer">
-                <FilterTopBox />
-                {/* <!-- ls Switcher --> */}
-              </div>
-            </div>
-            {/* <!-- End Content Column --> */}
           </div>
-          {/* End row */}
         </div>
-        {/* End container */}
       </section>
-      {/* <!--End Listing Page Section --> */}
 
       <FooterDefault footerStyle="alternate5" />
-      {/* <!-- End Main Footer --> */}
     </>
   );
 };

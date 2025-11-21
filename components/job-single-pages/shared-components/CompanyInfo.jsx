@@ -1,29 +1,47 @@
-import Social from "../social/Social";
-
-const CompanyInfo = () => {
+const CompanyInfo = ({ company }) => {
   return (
     <ul className="company-info">
       <li>
-        Primary industry: <span>Software</span>
+        Primary industry: <span>{company?.industry}</span>
       </li>
       <li>
-        Company size: <span>501-1,000</span>
+        Company size: <span>{company?.size}</span>
       </li>
       <li>
-        Founded in: <span>2011</span>
+        Phone:{" "}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => window.open(`tel:${company?.phone}`)}
+        >
+          {company?.phone}
+        </span>
       </li>
       <li>
-        Phone: <span>123 456 7890</span>
+        Email:{" "}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => window.open(`mailto:${company?.email}`)}
+        >
+          {company?.email}
+        </span>
       </li>
       <li>
-        Email: <span>info@joio.com</span>
+        Contact name: <span>{company?.contactPersonName}</span>
       </li>
       <li>
-        Location: <span>London, UK</span>
+        Location:{" "}
+        <span>
+          {company?.address?.city}, {company?.address?.country}
+        </span>
       </li>
       <li>
-        Social media:
-        <Social />
+        Website:{" "}
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => window.open(company?.website, "_blank")}
+        >
+          {company?.website}
+        </span>
       </li>
     </ul>
   );
