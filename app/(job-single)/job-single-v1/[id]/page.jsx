@@ -10,18 +10,33 @@ import JobSkills from "@/components/job-single-pages/shared-components/JobSkills
 import CompnayInfo from "@/components/job-single-pages/shared-components/CompanyInfo";
 import SocialTwo from "@/components/job-single-pages/social/SocialTwo";
 import JobDetailsDescriptions from "@/components/job-single-pages/shared-components/JobDetailsDescriptions";
-import ApplyJobModalContent from "@/components/job-single-pages/shared-components/ApplyJobModalContent";
 import Image from "next/image";
 import useGetJobs from "@/hooks/jobs/useGetJobs";
 import { formatNumber, FormatTime } from "@/hooks/global/helpers";
 import useSavedJobs from "@/hooks/jobs/useSavedJobs";
 import { useEffect, useState } from "react";
 import { Bookmark, BookmarkFill } from "react-bootstrap-icons";
+import Link from "next/link";
+import useJobActions from "@/hooks/jobs/useJobActions";
+import { showToast } from "@/hooks/global/showToast";
 
 const JobSingleDynamicV1 = () => {
   const [isSaved, setIsSaved] = useState(false);
-  const { oneJob, openApply, setOpenApply, id } = useGetJobs();
+  const { oneJob, id, refetchOneJob } = useGetJobs();
   const { savedJobs, handleSave, saving, unsaving } = useSavedJobs();
+  const {
+    accepted,
+    setAccepted,
+    apply,
+    isLoading,
+    error,
+    submit,
+    openApply,
+    setOpenApply,
+    userData,
+    coverLetter,
+    setCoverLetter,
+  } = useJobActions(refetchOneJob);
 
   useEffect(() => {
     checkIfSaved();
@@ -79,13 +94,21 @@ const JobSingleDynamicV1 = () => {
 
                 {/* Apply & Save buttons */}
                 <div className="btn-box">
-                  <button
-                    type="button"
-                    onClick={() => setOpenApply(true)}
-                    className="theme-btn btn-style-one"
-                  >
-                    Apply For Job
-                  </button>
+                  {!oneJob?.isApplied ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (userData) setOpenApply(true);
+                        else
+                          showToast("error", "Please log in to apply for jobs");
+                      }}
+                      className="theme-btn btn-style-one"
+                    >
+                      Apply For Job
+                    </button>
+                  ) : (
+                    <button className="success-btn">Already applied</button>
+                  )}
                   <button
                     className="bookmark-btn"
                     onClick={() => handleSave({ ...oneJob, isSaved })}
@@ -120,7 +143,56 @@ const JobSingleDynamicV1 = () => {
                           ></button>
                         </div>
 
-                        <ApplyJobModalContent />
+                        <form className="default-form job-apply-form">
+                          <div className="row">
+                            <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                              <textarea
+                                className="darma"
+                                name="message"
+                                value={coverLetter}
+                                onChange={(e) => setCoverLetter(e.target.value)}
+                                placeholder="Cover letter (Optional)"
+                              ></textarea>
+                            </div>
+
+                            <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                              <div className="input-group checkboxes square">
+                                <input
+                                  type="checkbox"
+                                  name="remember-me"
+                                  id="rememberMe"
+                                  checked={accepted}
+                                  onChange={(e) =>
+                                    setAccepted(e.target.checked)
+                                  }
+                                />
+                                <label
+                                  htmlFor="rememberMe"
+                                  className="remember"
+                                >
+                                  <span className="custom-checkbox"></span> I
+                                  accept the{" "}
+                                  <span data-bs-dismiss="modal">
+                                    <Link href="/terms">
+                                      Terms and Conditions and Privacy Policy
+                                    </Link>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+
+                            <div className="col-lg-12 col-md-12 col-sm-12 form-group">
+                              <button
+                                className="theme-btn btn-style-one w-100"
+                                type="button"
+                                name="submit-form"
+                                onClick={submit}
+                              >
+                                Apply Job
+                              </button>
+                            </div>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>

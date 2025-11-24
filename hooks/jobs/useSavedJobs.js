@@ -33,7 +33,7 @@ const useSavedJobs = () => {
 
   const handleSave = async (item) => {
     if (!userData) {
-      showToast("error", "Please log in to save the job");
+      showToast("error", "Please log in to save jobs");
       return;
     }
 

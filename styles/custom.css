@@ -16,3 +16,16 @@
   padding: 20px;
   position: relative;
 }
+
+.success-btn {
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  color: #fff;
+  background-color: rgb(5, 148, 0);
+  font-size: 15px;
+  line-height: 20px;
+  border-radius: 8px;
+  font-weight: 400;
+  padding: 18px 35px 15px 35px;
+}

@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
 const DB_Name = Cookies.get("DB_Name");
-const jwt = Cookies.get("Token");
+const jwt = Cookies.get("token");
 
 export const jobApplicationsApi = createApi({
   reducerPath: "jobApplicationsApi",
@@ -28,7 +28,7 @@ export const jobApplicationsApi = createApi({
           page: String(page),
         });
 
-        if (userId) params.append("userId", userId);
+        if (userId) params.append("jobSeekerId", userId);
 
         return `${applicationEndpoint}?${params.toString()}`;
       },
@@ -67,9 +67,9 @@ export const jobApplicationsApi = createApi({
 });
 
 export const {
-  useGetAllJobsQuery,
-  useGetOneJobQuery,
-  useCreateJobMutation,
-  useUpdateJobMutation,
-  useDeleteJobMutation,
+  useGetAllApplicationsQuery,
+  useGetOneApplicationQuery,
+  useCreateApplicationMutation,
+  useUpdateApplicationMutation,
+  useDeleteApplicationMutation,
 } = jobApplicationsApi;

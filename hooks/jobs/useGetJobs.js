@@ -10,7 +10,6 @@ const useGetJobs = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [companyId, setCompanyId] = useState("");
-  const [openApply, setOpenApply] = useState(false);
 
   const {
     data: jobs,
@@ -58,8 +57,6 @@ const useGetJobs = () => {
     page,
     setPage,
     setCompanyId,
-    openApply,
-    setOpenApply,
     id,
   };
 };

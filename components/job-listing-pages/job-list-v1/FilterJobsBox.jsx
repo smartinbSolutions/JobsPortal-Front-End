@@ -1,31 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import jobs from "../../../data/job-featured";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addCategory,
-  addDatePosted,
-  addDestination,
-  addKeyword,
-  addLocation,
-  addPerPage,
-  addSalary,
-  addSort,
-  addTag,
-  clearExperience,
-  clearJobType,
-} from "../../../features/filter/filterSlice";
-import {
-  clearDatePostToggle,
-  clearExperienceToggle,
-  clearJobTypeToggle,
-} from "../../../features/job/jobSlice";
 import Image from "next/image";
 import { useGetAllJobsQuery } from "@/RTK/jobsApi";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import LoadingCard from "@/components/common/LoadingCard";
+import useSavedJobs from "@/hooks/jobs/useSavedJobs";
+import { Bookmark, BookmarkFill } from "react-bootstrap-icons";
+import { formatNumber, FormatTime } from "@/hooks/global/helpers";
 
 const FilterJobsBox = () => {
   const { id: companyId } = useParams();
@@ -43,6 +26,11 @@ const FilterJobsBox = () => {
   const [sort, setSort] = useState(""); // "asc" | "des"
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+
+  const { savedJobs, handleSave, saving, unsaving } = useSavedJobs();
+  const checkIfSaved = (jobId) => {
+    return savedJobs?.some((item) => item?.job?._id === jobId);
+  };
 
   // Fetch jobs from backend using all filters
   const { data, isLoading, error } = useGetAllJobsQuery({
@@ -84,7 +72,7 @@ const FilterJobsBox = () => {
 
   return (
     <>
-      {/* TOP BAR */}
+      {/* Filters bar */}
       <div className="ls-switcher">
         <div className="show-result">
           <div className="show-1023">
@@ -151,57 +139,97 @@ const FilterJobsBox = () => {
 
       {/* JOB LIST */}
       {jobs?.length > 0 ? (
-        jobs.map((item) => (
-          <div className="job-block" key={item._id}>
-            <div className="inner-box">
-              <div className="content">
-                <span className="company-logo">
-                  <Image
-                    width={50}
-                    height={49}
-                    src={item.logo || "/images/no-logo.png"}
-                    alt="company logo"
-                  />
-                </span>
+        jobs.map((item) => {
+          return (
+            <div className="job-block" key={item?._id}>
+              <div className="inner-box">
+                <div className="content">
+                  <span className="company-logo">
+                    <Image
+                      width={50}
+                      height={49}
+                      src={item?.logo || "/images/no-logo.png"}
+                      alt="company logo"
+                    />
+                  </span>
 
-                <h4>
-                  <Link href={`/job-single-v1/${item._id}`}>
-                    {item.jobTitle}
-                  </Link>
-                </h4>
+                  <h4>
+                    <Link href={`/job-single-v1/${item?._id}`}>
+                      {item?.jobTitle}
+                    </Link>
+                  </h4>
 
-                <ul className="job-info">
-                  <li>
-                    <span className="icon flaticon-briefcase"></span>{" "}
-                    {item.companyName}
-                  </li>
-                  <li>
-                    <span className="icon flaticon-map-locator"></span>{" "}
-                    {item.location}
-                  </li>
-                  <li>
-                    <span className="icon flaticon-clock-3"></span> {item.time}
-                  </li>
-                  <li>
-                    <span className="icon flaticon-money"></span> {item.salary}
-                  </li>
-                </ul>
-
-                <ul className="job-other-info">
-                  {item.jobType?.map((val, i) => (
-                    <li key={i} className={`${val.styleClass}`}>
-                      {val.type}
+                  <ul className="job-info">
+                    <li>
+                      <span className="icon flaticon-briefcase"></span>{" "}
+                      {item?.company?.companyName}
                     </li>
-                  ))}
-                </ul>
+                    <li>
+                      <span className="icon flaticon-map-locator"></span>{" "}
+                      {item?.location}
+                    </li>
+                    <li>
+                      <span className="icon flaticon-clock-3"></span>{" "}
+                      {FormatTime(item?.createdAt, false)}
+                    </li>
+                    <li>
+                      <span className="icon flaticon-money"></span>{" "}
+                      {formatNumber(item?.expectedSalary)}
+                    </li>
+                  </ul>
 
-                <button className="bookmark-btn">
-                  <span className="flaticon-bookmark"></span>
-                </button>
+                  <ul className="job-other-info">
+                    {/* First 3 items */}
+                    {item?.skills?.slice(0, 3).map((val, i) => (
+                      <li
+                        key={i}
+                        className="tag"
+                        style={{
+                          backgroundColor: "#b999ffff",
+                          color: "#FFF",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {val}
+                      </li>
+                    ))}
+
+                    {/* “+X more” indicator */}
+                    {item?.skills?.length > 3 && (
+                      <li
+                        className="tag"
+                        style={{
+                          backgroundColor: "#888",
+                          color: "#FFF",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        +{item?.skills.length - 3} more
+                      </li>
+                    )}
+                  </ul>
+
+                  <button
+                    className="bookmark-btn"
+                    onClick={() =>
+                      handleSave({
+                        _id: item?._id,
+                        isSaved: checkIfSaved(item?._id),
+                      })
+                    }
+                    disabled={saving || unsaving}
+                  >
+                    {checkIfSaved(item?._id) ? (
+                      <BookmarkFill color="#b999ffff" />
+                    ) : (
+                      <Bookmark color="#b999ffff" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <div>No jobs found</div>
       )}

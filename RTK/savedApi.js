@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 const DB_Name = Cookies.get("DB_Name");
 const cookiesData = Cookies.get("user");
 const user = cookiesData ? JSON.parse(cookiesData) : null;
-const jwt = Cookies.get("Token");
+const jwt = Cookies.get("token");
 
 export const savedApi = createApi({
   reducerPath: "savedApi",
