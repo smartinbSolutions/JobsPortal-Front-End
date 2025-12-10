@@ -28,7 +28,7 @@ const useGetJobs = () => {
     isLoading: oneJobLoading,
     error: oneJobError,
     refetch: refetchOneJob,
-  } = useGetOneJobQuery(id);
+  } = useGetOneJobQuery(id, { skip: !id });
 
   const handleSearch = () => {
     if (keyword) setQuery(keyword);

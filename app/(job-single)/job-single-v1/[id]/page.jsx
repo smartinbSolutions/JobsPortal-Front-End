@@ -186,7 +186,7 @@ const JobSingleDynamicV1 = () => {
                                 className="theme-btn btn-style-one w-100"
                                 type="button"
                                 name="submit-form"
-                                onClick={submit}
+                                onClick={() => submit(oneJob?.company?._id)}
                               >
                                 Apply Job
                               </button>

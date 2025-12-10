@@ -5,25 +5,28 @@ import FooterDefault from "@/components/footer/common-footer";
 import DefaulHeader from "@/components/header/DefaulHeader";
 import MobileMenu from "@/components/header/MobileMenu";
 import JobDetailsDescriptions from "@/components/employer-single-pages/shared-components/JobDetailsDescriptions";
-import RelatedJobs from "@/components/employer-single-pages/related-jobs/RelatedJobs";
 import Image from "next/image";
 import { useGetCompanyQuery } from "@/RTK/jobCompaniesApi";
 import LoadingCard from "@/components/common/LoadingCard";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-import { showToast } from "@/hooks/global/showToast";
+import JobCard from "@/components/common/JobCard";
+import useSavedJobs from "@/hooks/jobs/useSavedJobs";
 
 const EmployersSingleV1 = () => {
   const { id } = useParams();
 
   const { data, isLoading, error } = useGetCompanyQuery(id);
+  const { savedJobs, handleSave, saving, unsaving } = useSavedJobs();
 
   const [employer, setEmployer] = useState();
 
   useEffect(() => {
     if (data) setEmployer(data?.data);
   }, [id, data]);
+
+  console.log(`employer`, employer);
 
   if (isLoading) return <LoadingCard />;
 
@@ -86,43 +89,6 @@ const EmployersSingleV1 = () => {
                     Browse Jobs
                   </a>
                 </div>
-                {/* <div className="btn-box">
-                  <button
-                    className="theme-btn btn-style-one"
-                    data-bs-toggle="modal"
-                    data-bs-target="#privateMessage"
-                  >
-                    Private Message
-                  </button>
-                  <button className="bookmark-btn">
-                    <i className="flaticon-bookmark"></i>
-                  </button>
-                </div>
-
-                <div
-                  className="modal fade"
-                  id="privateMessage"
-                  tabIndex="-1"
-                  aria-hidden="true"
-                >
-                  <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div className="apply-modal-content modal-content">
-                      <div className="text-center">
-                        <h3 className="title">
-                          Send message to {employer?.name}
-                        </h3>
-                        <button
-                          type="button"
-                          className="closed-modal"
-                          data-bs-dismiss="modal"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-
-                      <PrivateMessageBox />
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
@@ -143,7 +109,24 @@ const EmployersSingleV1 = () => {
                       </div>
                     </div>
 
-                    <RelatedJobs />
+                    <div className="row">
+                      {employer?.jobAdvertisement?.slice(0, 3)?.map((item) => {
+                        return (
+                          <div
+                            className="job-block col-lg-6 col-md-12 col-sm-12"
+                            key={item?._id}
+                          >
+                            <JobCard
+                              item={item}
+                              handleSave={handleSave}
+                              saving={saving}
+                              unsaving={unsaving}
+                              showCompany={false}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 ) : (
                   <div className="title-box">

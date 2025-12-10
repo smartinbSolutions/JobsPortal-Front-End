@@ -1,8 +1,14 @@
+import dynamic from "next/dynamic";
+
+const DescriptionClient = dynamic(() => import("./DescriptionClient"), {
+  ssr: false,
+});
+
 const JobDetailsDescriptions = ({ oneJob }) => {
   return (
     <div className="job-detail">
       <h4>Job Description</h4>
-      <p>{oneJob?.description}</p>
+      <DescriptionClient html={oneJob?.description || ""} />
       <h4>Key Responsibilities</h4>
       <ul className="list-style-three">
         {oneJob?.responsibilities?.map((item, i) => {

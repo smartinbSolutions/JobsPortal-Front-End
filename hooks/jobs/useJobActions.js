@@ -14,7 +14,7 @@ const useJobActions = (refetchOneJob) => {
 
   const [apply, { isLoading, error }] = useCreateApplicationMutation();
 
-  const submit = async () => {
+  const submit = async (jobsCompanyId) => {
     if (!userData) {
       showToast("error", "Please log in to apply for jobs");
       return;
@@ -30,6 +30,8 @@ const useJobActions = (refetchOneJob) => {
       await apply({
         jobSeekerId: userData?._id,
         jobId: id,
+        coverLetter,
+        jobsCompanyId,
       }).unwrap();
       refetchOneJob();
       setOpenApply(false);

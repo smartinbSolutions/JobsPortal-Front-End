@@ -37,7 +37,7 @@ export const jobsApi = createApi({
     getOneJob: builder.query({
       query: (id) =>
         `${jobsEndpoint}/${id}?companyId=${DB_Name}${
-          user && `&userId=${user?._id}`
+          user ? `&userId=${user?._id}` : ""
         }`,
       providesTags: (result, error, id) => [{ type: "job", id }],
     }),

@@ -3,8 +3,10 @@ import { useState } from "react";
 import { showToast } from "../global/showToast";
 import { isValidEmail } from "../global/helpers";
 import { useCompanyRegisterMutation } from "@/RTK/jobCompaniesApi";
+import { useRouter } from "next/navigation";
 
 const useSignup = () => {
+  const router = useRouter();
   const [registerType, setRegisterType] = useState("seeker");
 
   const [email, setEmail] = useState("");
@@ -73,6 +75,15 @@ const useSignup = () => {
     return ok;
   };
 
+  const reset = () => {
+    setCompanyName("");
+    setLegalName("");
+    setCompanyEmail("");
+    setContactPersonName("");
+    setIndustry("");
+    setRegistrationNumber("");
+  };
+
   const submit = async () => {
     if (!valid()) return;
     try {
@@ -89,12 +100,7 @@ const useSignup = () => {
           industry,
           registrationNumber,
         }).unwrap();
-        setCompanyName("");
-        setLegalName("");
-        setCompanyEmail("");
-        setContactPersonName("");
-        setIndustry("");
-        setRegistrationNumber("");
+        reset();
         showToast(
           "success",
           "Done! We'll get in touch with you when we validate your data",
@@ -102,6 +108,7 @@ const useSignup = () => {
             autoClose: 6000,
           }
         );
+        router.push("/");
       }
     } catch (error) {
       console.log(error);
@@ -154,6 +161,7 @@ const useSignup = () => {
     openVerify,
     setOpenVerify,
     submitCode,
+    reset,
   };
 };
 

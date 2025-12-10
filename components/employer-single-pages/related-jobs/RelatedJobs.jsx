@@ -1,51 +1,59 @@
+"use client";
 import Link from "next/link";
-import jobs from "../../../data/job-featured";
 import Image from "next/image";
+import { FormatTime } from "@/hooks/global/helpers";
+import JobSkills from "@/components/job-single-pages/shared-components/JobSkills";
 
-const RelatedJobs = () => {
+const RelatedJobs = ({ data, employer }) => {
+  if (!data) return null;
+
   return (
     <>
-      {jobs.slice(0, 3).map((item) => (
-        <div className="job-block" key={item.id}>
+      {data?.slice(0, 3).map((item, i) => (
+        <div className="job-block" key={i}>
           <div className="inner-box">
             <div className="content">
               <span className="company-logo">
-                <Image width={50} height={49} src={item.logo} alt="resource" />
+                <Image
+                  width={50}
+                  height={49}
+                  src={employer?.logo}
+                  alt="resource"
+                />
               </span>
               <h4>
-                <Link href={`/job-single-v1/${item.id}`}>{item.jobTitle}</Link>
+                <Link href={`/job-single-v1/${item?._id}`}>
+                  {item?.jobTitle}
+                </Link>
               </h4>
 
               <ul className="job-info">
                 <li>
                   <span className="icon flaticon-briefcase"></span>
-                  {item.company}
+                  {employer?.companyName}
                 </li>
-                {/* compnay info */}
+
                 <li>
                   <span className="icon flaticon-map-locator"></span>
-                  {item.location}
+                  {item?.location}
                 </li>
-                {/* location info */}
-                <li>
-                  <span className="icon flaticon-clock-3"></span> {item.time}
-                </li>
-                {/* time info */}
-                <li>
-                  <span className="icon flaticon-money"></span> {item.salary}
-                </li>
-                {/* salary info */}
-              </ul>
-              {/* End .job-info */}
 
-              <ul className="job-other-info">
-                {item.jobType.map((val, i) => (
-                  <li key={i} className={`${val.styleClass}`}>
-                    {val.type}
-                  </li>
-                ))}
+                <li>
+                  <span className="icon flaticon-clock-3"></span>{" "}
+                  {FormatTime(item?.createdAt, true)}
+                </li>
+
+                <li>
+                  <span className="icon flaticon-money"></span>{" "}
+                  {item?.expectedSalary}
+                </li>
               </ul>
-              {/* End .job-other-info */}
+              <div className="widget-content">
+                <ul className="job-other-info">
+                  <JobSkills skills={item?.skills} />
+                </ul>
+              </div>
+
               <button className="bookmark-btn">
                 <span className="flaticon-bookmark"></span>
               </button>

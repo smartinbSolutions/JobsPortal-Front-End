@@ -1,19 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // output: "export", // Forces pure static HTML export
   images: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
+    unoptimized: true, // Required for static export to avoid image optimization server
   },
   sassOptions: {
-    quietDeps: true, // This will silence deprecation warnings
+    quietDeps: true,
     silenceDeprecations: [
       "mixed-decls",
       "legacy-js-api",

@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:81/api/";
+export const BASE_URL = "http://localhost:81/jobs/api/";
 export const loginEndpoint = "auth/loginSeekers";
 export const signupEndpoint = "auth/signupSeekers";
 export const verifyEndpoint = "auth/verifyEmailJobSeekers";

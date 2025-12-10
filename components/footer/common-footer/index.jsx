@@ -16,20 +16,20 @@ const index = ({ footerStyle = "" }) => {
                     <Image
                       width={154}
                       height={50}
-                      src="/images/logo.svg"
+                      src="/images/logo.png"
                       alt="brand"
                     />
                   </a>
                 </div>
                 <p className="phone-num">
                   <span>Call us </span>
-                  <a href="thebeehost@support.com">123 456 7890</a>
+                  <a href="tel:905300606202">+90 530 060 62 02</a>
                 </p>
                 <p className="address">
                   329 Queensberry Street, North Melbourne VIC
                   <br /> 3051, Australia. <br />
-                  <a href="mailto:support@superio.com" className="email">
-                    support@superio.com
+                  <a href="mailto:info@smartinb.com" className="email">
+                    info@smartinb.com
                   </a>
                 </p>
               </div>

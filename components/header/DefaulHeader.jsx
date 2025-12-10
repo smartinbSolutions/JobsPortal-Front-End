@@ -47,7 +47,7 @@ const DefaulHeader = () => {
                 <Image
                   width={154}
                   height={50}
-                  src="/images/logo.svg"
+                  src="/images/logo.png"
                   alt="brand"
                 />
               </Link>
@@ -73,12 +73,6 @@ const DefaulHeader = () => {
             >
               {userData ? userData?.name : "Login / Register"}
             </a>
-            <Link
-              href="/employers-dashboard/post-jobs"
-              className="theme-btn btn-style-one"
-            >
-              Job Post
-            </Link>
           </div>
         </div>
       </div>
