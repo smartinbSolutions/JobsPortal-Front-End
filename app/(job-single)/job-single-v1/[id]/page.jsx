@@ -251,7 +251,10 @@ const JobSingleDynamicV1 = () => {
                           />
                         </div>
                         <h5 className="company-name">
-                          {oneJob?.company?.companyName}
+                          {oneJob?.company?.companyName}{" "}
+                          {oneJob?.company?.verified && (
+                            <span className="icon flaticon-check text-md"></span>
+                          )}
                         </h5>
                         <a
                           href={`/employers-single-v1/${oneJob?.company?._id}`}
